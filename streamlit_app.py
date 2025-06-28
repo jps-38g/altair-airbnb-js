@@ -16,6 +16,8 @@ df['review_scores_rating_bin'] = pd.cut(df['review_scores_rating'], bins=[0, 3, 
                                     labels=['0 to 3','3 to 3.5', '3.5 to 4', '4 to 4.5', '4.5 to 4.75', '4.75 to 5'])   
     
 
+st.cache_data.clear()
+
 # Selectbox: Filter by Rating
 rating = st.selectbox("Filter by Property Rating", ["All"] + list(df["review_scores_rating_bin"].unique()))
 
