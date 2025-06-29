@@ -28,7 +28,7 @@ rating_bins = df['review_scores_rating_bin'].unique().tolist()
 # Sorting the rating bins
 rating_bins.sort()
 
-st.title("Airbnb Available Listings By Neighborhood")
+st.title("Boston Airbnb Available Listings By Neighborhood")
 
 # Selectbox: Filter by Rating
 # rating = st.selectbox("Filter by Property Rating", ["All"] + list(df["review_scores_rating_bin"].unique()))
