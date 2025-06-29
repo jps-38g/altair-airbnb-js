@@ -28,11 +28,12 @@ rating_bins = df['review_scores_rating_bin'].unique().tolist()
 # Sorting the rating bins
 rating_bins.sort()
 
+st.title("Airbnb Available Listings By Neighborhood")
+
 # Selectbox: Filter by Rating
 # rating = st.selectbox("Filter by Property Rating", ["All"] + list(df["review_scores_rating_bin"].unique()))
 
 rating = st.selectbox("Filter by Property Rating", ["All"] + rating_bins)
-
 
 # Apply filters
 filtered_props = df if rating == "All" else df[(df["review_scores_rating_bin"] == rating)]
@@ -41,7 +42,6 @@ filtered_props = df if rating == "All" else df[(df["review_scores_rating_bin"] =
 select_neighborhood = alt.selection_point(fields=['neighbourhood_cleansed'], on='click', empty='all')
 
 # First chart: Bar chart of available properties by neighbourhood
-st.title("Airbnb Available Listings By Neighbourhood")
 bar_chart = alt.Chart(filtered_props).mark_bar().encode(
     x=alt.X('neighbourhood_cleansed').sort('-y'),
     y=alt.Y('count()', title='Available Property Count'),
