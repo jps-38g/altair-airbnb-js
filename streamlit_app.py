@@ -24,15 +24,21 @@ rating = st.selectbox("Filter by Property Rating", ["All"] + list(df["review_sco
 # Apply filters
 filtered_props = df if rating == "All" else df[(df["review_scores_rating_bin"] == rating)]
 
+# Create a bar chart with single selection
+select_neighborhood = alt.selection_point(fields=['neighbourhood_cleansed'], on='click', empty='all')
+
 # First chart: Bar chart of available properties by neighbourhood
 st.title("Airbnb Available Listings")
 bar_chart = alt.Chart(filtered_props).mark_bar().encode(
     x=alt.X('neighbourhood_cleansed').sort('-y'),
     y=alt.Y('count()', title='Available Property Count'),
-    color=alt.Color("count()", scale=alt.Scale(scheme="greens"))
-    )
+    color=alt.condition(select_neighborhood, 'neighbourhood_cleansed', alt.value('lightgray'), legend=None),
+    tooltip=['neighbourhood_cleansed', 'count()']
+).add_params(      
+    select_neighborhood
+)
 
-st.altair_chart(bar_chart, use_container_width=False)
+#st.altair_chart(bar_chart, use_container_width=False)
 
 # Second chart: Bar Chart of Response Time By Hosts
 
@@ -40,13 +46,22 @@ bar_chart2 = alt.Chart(filtered_props, title="Bar Chart:  Property Counts By Hos
     y=alt.Y('host_response_time', title='Host Response Time').sort('-x'),
     x=alt.Y('count()', title='Property Count'),
     color=alt.Color("count()", scale=alt.Scale(scheme="greens"))
-)
-st.altair_chart(bar_chart2, use_container_width=False)
+).transform_filter(
+    select_neighborhood
+    )
+    
+#st.altair_chart(bar_chart2, use_container_width=False)
 
 # Third chart: Bar Chart of Properties By Binned Number of Days Available
-bar_chart3 = alt.Chart(filtered_props, title="Bar Chart: Property Counts By Number of Days Available").mark_bar().encode(
-    y=alt.Y('availability_365_bin', title='Number of Days Available').sort('-x'),
+bar_chart3 = alt.Chart(filtered_props, title="Bar Chart: Property Counts By # of Days Available In Last Year").mark_bar().encode(
+    y=alt.Y('availability_365_bin', title='# of Days Available in Last Year').sort('-x'),
     x=alt.Y('count()', title='Property Count'),
     color=alt.Color("count()", scale=alt.Scale(scheme="greens"))
-)
-st.altair_chart(bar_chart3, use_container_width=False)
+ ).transform_filter(
+    select_neighborhood
+    )
+
+#st.altair_chart(bar_chart3, use_container_width=False)
+
+# Combine and display the charts
+st.altair_chart(alt.vconcat(bar_chart, bar_chart2, bar_chart3),use_container_width=False)
