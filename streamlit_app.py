@@ -58,7 +58,8 @@ bar_chart = alt.Chart(filtered_props).mark_bar().encode(
 bar_chart2 = alt.Chart(filtered_props, title="Bar Chart:  Property Counts By Host Response Time Bin").mark_bar().encode(
     y=alt.Y('host_response_time', title='Host Response Time').sort('-x'),
     x=alt.Y('count()', title='Property Count'),
-    color=alt.Color("count()", scale=alt.Scale(scheme="blues"))
+    color=alt.Color("count()", scale=alt.Scale(scheme="blues")),
+    tooltip=['host_response_time', 'count()']
 ).transform_filter(
     select_neighborhood
     )
@@ -69,7 +70,8 @@ bar_chart2 = alt.Chart(filtered_props, title="Bar Chart:  Property Counts By Hos
 bar_chart3 = alt.Chart(filtered_props, title="Bar Chart: Property Counts By # of Days Available In Last Year").mark_bar().encode(
     y=alt.Y('availability_365_bin', title='# of Days Available in Last Year').sort('-x'),
     x=alt.Y('count()', title='Property Count'),
-    color=alt.Color("count()", scale=alt.Scale(scheme="blues"))
+    color=alt.Color("count()", scale=alt.Scale(scheme="blues")),
+    tooltip=['availability_365_bin', 'count()']
  ).transform_filter(
     select_neighborhood
     )
